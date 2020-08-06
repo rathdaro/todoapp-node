@@ -23,6 +23,7 @@ const User = new mongoose.Schema({
         type: String,
         default: 'user',
     },
+    todo: [],
 },
 { timestamps: true},
 );
