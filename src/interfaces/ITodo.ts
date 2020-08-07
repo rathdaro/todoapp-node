@@ -3,4 +3,5 @@ export interface ITodo {
     title: string;
     info: string;
     complete: boolean;
+    user_id: string;
 }

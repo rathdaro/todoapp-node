@@ -1,5 +1,5 @@
 import { Container } from 'typedi';
-import { EventSubscriber, On, EventSubscriber } from 'event-dispatch';
+import { EventSubscriber, On} from 'event-dispatch';
 import events from './events';
 import { IUser } from '../interfaces/IUser';
 import mongoose from 'mongoose';
@@ -27,7 +27,7 @@ export default class UserSubscriber {
         try {
             const UserModel = Container.get('UserModel') as mongoose.Model<IUser & mongoose.Document>;
             
-            UserModel.create({ });
+            UserModel.create({  });
         } catch (e) {
             Logger.error(`Error on event ${events.user.signUp}: %o`, e);
             throw e;

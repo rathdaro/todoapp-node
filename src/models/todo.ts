@@ -7,7 +7,7 @@ const Todo = new mongoose.Schema({
         required: [true, 'Please enter a title'],
         index: true,
     },
-    description:  String,
+    info:  String,
     complete: Boolean
 });
 

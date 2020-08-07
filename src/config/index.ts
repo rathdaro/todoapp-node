@@ -17,10 +17,18 @@ export default {
     },
     agenda: {
         dbCollection: process.env.AGENDA_DB_COLLECTION,
-        pooltime: process.env.AGENDA_POOL_TIME,
-        concurrency: parseInt(process.env.AGENDA_CONCURRENCY, 10)
+        pooltime: process.env.AGENDA_POOL_TIME || 'one mintue',
+        concurrency: parseInt(process.env.AGENDA_CONCURRENCY, 10) || 20,
     },
     api: {
         prefix: '/api'
     },
+    agendash: {
+        user: 'agendash',
+        password: '123456',
+    },
+    emails: {
+        apiKey: process.env.MAILGUN_API_KEY,
+        domain: process.env.MAILGUN_DOMAIN
+    }
 }
