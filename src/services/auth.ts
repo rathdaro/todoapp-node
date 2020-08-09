@@ -36,16 +36,16 @@ export default class AuthService {
             if(!userRecord) {
                 throw new Error('User cannot be created');
             }
-            this.logger.silly('Sending welcome email');
-            await this.mailer.SendWelcomeEmail(userRecord);
-            this.eventDispatcher.dispatch(events.user.signUp, { user: userRecord});
+            // this.logger.silly('Sending welcome email');
+            // await this.mailer.SendWelcomeEmail(userRecord);
+            // this.eventDispatcher.dispatch(events.user.signUp, { user: userRecord});
 
             const user = userRecord.toObject();
             Reflect.deleteProperty(user, 'password');
             Reflect.deleteProperty(user, 'salt');
             return { user, token };
         } catch (e) {
-            this.logger.error(e);
+            this.logger.error("AuthServiceSignUpError : %o", e);
             throw e;
         }
     }
@@ -54,7 +54,7 @@ export default class AuthService {
         try {
 
         } catch (e) {
-            this.logger.error(e);
+            this.logger.error('AuthServiceSignInError : %o', e);
             throw e;
         }
         const userRecord  = await this.userModel.findOne({ email });

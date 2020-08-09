@@ -52,7 +52,6 @@
     "moment-timezone": "^0.5.23",
     "mongoose": "^5.9.28",
     "morgan": "^1.9.1",
-    "node-gyp": "^7.0.0",
     "reflect-metadata": "^0.1.12",
     "swagger-ui-express": "^4.1.4",
     "typedi": "^0.8.0",

@@ -23,11 +23,9 @@ export default class UserSubscriber {
     @On(events.user.signUp)
     public onUserSignUp({ name, email, _id }: Partial<IUser>) {
         const Logger = Container.get('logger');
-
+        // TODO later
         try {
             const UserModel = Container.get('UserModel') as mongoose.Model<IUser & mongoose.Document>;
-            
-            UserModel.create({  });
         } catch (e) {
             Logger.error(`Error on event ${events.user.signUp}: %o`, e);
             throw e;
