@@ -2,8 +2,7 @@ import { Service, Inject } from 'typedi';
 import jwt from 'jsonwebtoken';
 import MailerService from './mailer';
 import config from '../config';
-import argon2 from 'argon2';
-import { randomBytes } from 'crypto';
+import bcrypt from 'bcrypt';
 import { IUser, IUserInputDTO } from '../interfaces/IUser';
 import { EventDispatcher, EventDispatcherInterface } from '../decorators/eventDispatcher';
 import events from '../subscribers/events';
@@ -19,10 +18,12 @@ export default class AuthService {
 
     public async SignUp(userInputDTO: IUserInputDTO): Promise<{ user: IUser; token: string }> {
         try {
-            const salt = randomBytes(32);
 
             this.logger.silly('Hashing password');
-            const hashedPassword = await argon2.hash(userInputDTO.password, { salt });
+            const saltRounds = 10;
+            const salt = bcrypt.generateSaltSync(saltRounds);
+            const hashedPassword = bcrypt.hashSync(userInputDTO.password, salt);
+
             this.logger.silly('Creating user db record');
             const userRecord = await this.userModel.create({
                 ...userInputDTO,
@@ -50,12 +51,18 @@ export default class AuthService {
     }
 
     public async SignIn(email: string, password: string): Promise<{ user: IUser, token: string}> {
+        try {
+
+        } catch (e) {
+            this.logger.error(e);
+            throw e;
+        }
         const userRecord  = await this.userModel.findOne({ email });
         if(!userRecord) {
             throw new Error('User not registered');
         }
         this.logger.silly('Checking password');
-        const validPassword = await argon2.verify(userRecord.password, password);
+        const validPassword = await bcrypt.compareSync(password, userRecord.password);
         if (validPassword) {
             this.logger.silly('Password is valid!');
             this.logger.silly('Generating JWT');

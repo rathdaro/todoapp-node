@@ -56,7 +56,6 @@ export default (app: Router) => {
         const logger = Container.get('logger');
         logger.debug('Calling Sign-Out endpoint with body: %o', req.body );
         try {
-            AuthService.Logout(req.user);
             return res.status(200).end();
         } catch (e) {
             logger.error('error : %o', e);
