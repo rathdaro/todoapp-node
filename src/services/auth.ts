@@ -1,6 +1,6 @@
 import { Service, Inject } from 'typedi';
 import jwt from 'jsonwebtoken';
-import MailerService from './mailer';
+import MailgunService from './mailgun';
 import config from '../config';
 import bcrypt from 'bcrypt';
 import { IUser, IUserInputDTO } from '../interfaces/IUser';
@@ -11,7 +11,7 @@ import events from '../subscribers/events';
 export default class AuthService {
     constructor(
         @Inject('userModel') private userModel : Models.UserModel,
-        private mailer: MailerService,
+        private mailgun: MailgunService,
         @Inject('logger') private logger,
         @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
     ){}
@@ -21,13 +21,12 @@ export default class AuthService {
 
             this.logger.silly('Hashing password');
             const saltRounds = 10;
-            const salt = bcrypt.generateSaltSync(saltRounds);
+            const salt = bcrypt.genSaltSync(saltRounds);
             const hashedPassword = bcrypt.hashSync(userInputDTO.password, salt);
 
             this.logger.silly('Creating user db record');
             const userRecord = await this.userModel.create({
                 ...userInputDTO,
-                salt: salt.toString('hex'),
                 password: hashedPassword,
             });
             this.logger.silly('Generating JWT');
@@ -36,9 +35,9 @@ export default class AuthService {
             if(!userRecord) {
                 throw new Error('User cannot be created');
             }
-            // this.logger.silly('Sending welcome email');
-            // await this.mailer.SendWelcomeEmail(userRecord);
-            // this.eventDispatcher.dispatch(events.user.signUp, { user: userRecord});
+            this.logger.silly('Sending welcome email');
+            await this.mailgun.SendWelcomeEmail(userRecord.email);
+            this.eventDispatcher.dispatch(events.user.signUp, { user: userRecord});
 
             const user = userRecord.toObject();
             Reflect.deleteProperty(user, 'password');

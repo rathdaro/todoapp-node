@@ -3,8 +3,9 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import routes from '../api';
 import config from '../config';
+import { errors } from 'celebrate';
 
-export default ({ app }: { app: express.Application }) => {
+export default async ({ app }: { app: express.Application }) => {
     
     app.get('/status', (req, res) => {
         res.status(200).end();
@@ -21,6 +22,7 @@ export default ({ app }: { app: express.Application }) => {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(config.api.prefix, routes());
+    app.use(errors());
 
     app.use((req, res, next) => {
         const err = new Error('Not Found');
@@ -38,12 +40,12 @@ export default ({ app }: { app: express.Application }) => {
         return next(err);
     });
     
-    // app.use((err, req, res, next) => {
-    //     res.status(err.status || 500);
-    //     res.json({
-    //         errors: {
-    //             message: err.message,
-    //         },
-    //     });
-    // });
+    app.use((err, req, res, next) => {
+        res.status(err.status || 500);
+        res.json({
+            errors: {
+                message: err.message,
+            },
+        });
+    });
 }

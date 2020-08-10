@@ -1,17 +1,19 @@
 import { Container } from 'typedi';
-import MailService from '../services/mailer';
+import MailgunService from '../services/mailgun';
+import NodemailerService from '../services/nodemailer';
+import { Logger } from 'winston';
 
 export default class EmailSequenceJob {
     public async ExceptionHandler(job, done): Promise<void> {
-        const Logger = Container.get('logger')
+        const logger: Logger = Container.get('logger')
         try {
-            Logger.debug('Email Sequence Job triggered!');
+            logger.debug('Email Sequence Job triggered!');
             const { email, name }: { [key: string ]: string } = job.attrs.data;
-            const mailerServiceInstance = Container.get(MailService);
-            await mailerServiceInstance.SendWelcomeEmail(email)
+            const mailgunServiceInstance = Container.get(MailgunService);
+            await mailgunServiceInstance.SendWelcomeEmail(email)
             done();
         } catch (e) {
-            Logger.error('Error with Email Sequence Job: %o', e);
+            logger.error('Error with Email Sequence Job: %o', e);
             done(e);
         }
     }

@@ -4,6 +4,7 @@ import AuthService from '../../services/auth';
 import { IUserInputDTO } from '../../interfaces/IUser';
 import middlewares from '../middlewares';
 import { celebrate, Joi } from 'celebrate';
+import { Logger } from 'winston';
 
 const route = Router();
 
@@ -20,7 +21,7 @@ export default (app: Router) => {
             }),
         }),
         async (req: Request, res: Response, next: NextFunction) => {
-            const logger = Container.get('logger');
+            const logger: Logger = Container.get('logger');
             logger.debug('Calling Sign-Up endpoint with body: %o', req.body)
             try {
                 const authServiceInstance = Container.get(AuthService);
@@ -42,7 +43,7 @@ export default (app: Router) => {
             }),
         }),
         async (req: Request, res: Response, next: NextFunction) => {
-            const logger = Container.get('logger');
+            const logger: Logger = Container.get('logger');
             logger.debug('Calling Sign-Up endpoint with body: %o', req.body );
             try {
                 const authServiceInstance = Container.get(AuthService);
@@ -56,7 +57,7 @@ export default (app: Router) => {
     );
 
     route.post('/logout', middlewares.isAuth, (req: Request, res: Response, next: NextFunction ) => {
-        const logger = Container.get('logger');
+        const logger: Logger = Container.get('logger');
         logger.debug('Calling Sign-Out endpoint with body: %o', req.body );
         try {
             return res.status(200).end();
