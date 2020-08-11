@@ -6,14 +6,13 @@ import bcrypt from 'bcrypt';
 import { IUser, IUserInputDTO } from '../interfaces/IUser';
 import { EventDispatcher, EventDispatcherInterface } from '../decorators/eventDispatcher';
 import events from '../subscribers/events';
-import { Logger } from 'winston';
 
 @Service()
 export default class AuthService {
     constructor(
         @Inject('userModel') private userModel : Models.UserModel,
         private mailer: MailerService,
-        @Inject('logger') private logger: Logger,
+        @Inject('logger') private logger: any,
         @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
     ){}
 
@@ -36,33 +35,26 @@ export default class AuthService {
             if(!userRecord) {
                 throw new Error('User cannot be created');
             }
-            // this.logger.silly('Sending welcome email');
-            // await this.mailer.SendWelcomeEmail(userRecord.email);
-            // this.eventDispatcher.dispatch(events.user.signUp, { user: userRecord});
+            this.logger.silly('Sending welcome email');
+            await this.mailer.SendWelcomeEmail(userRecord.email);
+            this.eventDispatcher.dispatch(events.user.signUp, { user: userRecord});
 
             const user = userRecord.toObject();
             Reflect.deleteProperty(user, 'password');
-            Reflect.deleteProperty(user, 'salt');
             return { user, token };
         } catch (e) {
-            this.logger.error("AuthServiceSignUpError : %o", e);
+            this.logger.error(e);
             throw e;
         }
     }
 
     public async SignIn(email: string, password: string): Promise<{ user: IUser, token: string}> {
-        try {
-
-        } catch (e) {
-            this.logger.error('AuthServiceSignInError : %o', e);
-            throw e;
-        }
         const userRecord  = await this.userModel.findOne({ email });
         if(!userRecord) {
             throw new Error('User not registered');
         }
         this.logger.silly('Checking password');
-        const validPassword = await bcrypt.compareSync(password, userRecord.password);
+        const validPassword = bcrypt.compareSync(password, userRecord.password);
         if (validPassword) {
             this.logger.silly('Password is valid!');
             this.logger.silly('Generating JWT');

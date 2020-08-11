@@ -1,10 +1,9 @@
 import { Container } from 'typedi';
 import mongoose from 'mongoose';
 import { IUser } from '../../interfaces/IUser';
-import { Logger } from 'winston';
 
 const attachCurrentUser = async (req: any, res: any, next: any) => {
-    const logger: Logger = Container.get('logger');
+    const Logger: any = Container.get('logger');
     try {
         const UserModel = Container.get('userModel') as mongoose.Model<IUser & mongoose.Document>;
         const userRecord = await UserModel.findById(req.token._id);
@@ -16,7 +15,7 @@ const attachCurrentUser = async (req: any, res: any, next: any) => {
         req.currentUser = currentUser;
         return next();
     } catch (e) {
-        logger.error('Error attaching user to req: %o', e);
+        Logger.error('Error attaching user to req: %o', e);
         return next(e);
     }
 };
