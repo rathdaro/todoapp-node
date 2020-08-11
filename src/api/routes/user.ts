@@ -9,8 +9,4 @@ export default (app: Router) => {
     route.get('/me', middlewares.isAuth, middlewares.attachCurrentUser, (req: Request, res: Response) => {
         return res.json({ user: req.currentUser }).status(200);
     });
-
-    route.post('/', middlewares.isAuth, middlewares.attachCurrentUser, (req: Request, res: Response) => {
-
-    });
 };

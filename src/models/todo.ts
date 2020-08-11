@@ -9,6 +9,6 @@ const Todo = new mongoose.Schema({
     },
     info:  String,
     complete: Boolean
-});
+}, { timestamps: true });
 
 export default mongoose.model<ITodo & mongoose.Document>('Todo', Todo);

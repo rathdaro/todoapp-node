@@ -7,10 +7,10 @@ import { errors } from 'celebrate';
 
 export default async ({ app }: { app: express.Application }) => {
     
-    app.get('/status', (req, res) => {
+    app.get('/status', (req: any, res: any) => {
         res.status(200).end();
     });
-    app.head('/status', (req, res) => {
+    app.head('/status', (req: any, res: any) => {
         res.status(200).end();
     });
 
@@ -24,13 +24,13 @@ export default async ({ app }: { app: express.Application }) => {
     app.use(config.api.prefix, routes());
     app.use(errors());
 
-    app.use((req, res, next) => {
+    app.use((req: any, res: any, next: any) => {
         const err = new Error('Not Found');
         err['status'] = 404;
         next(err);
     });
 
-    app.use((err, req, res, next) => {
+    app.use((err: any, req: any, res: any, next: any) => {
         if (err.name == 'UnauthorizedError') {
             return res
             .status(err.status)
@@ -40,7 +40,7 @@ export default async ({ app }: { app: express.Application }) => {
         return next(err);
     });
     
-    app.use((err, req, res, next) => {
+    app.use((err: any, req: any, res: any, next: any) => {
         res.status(err.status || 500);
         res.json({
             errors: {

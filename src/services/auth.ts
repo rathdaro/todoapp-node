@@ -1,18 +1,19 @@
 import { Service, Inject } from 'typedi';
 import jwt from 'jsonwebtoken';
-import MailgunService from './mailgun';
+import MailerService from './mailer';
 import config from '../config';
 import bcrypt from 'bcrypt';
 import { IUser, IUserInputDTO } from '../interfaces/IUser';
 import { EventDispatcher, EventDispatcherInterface } from '../decorators/eventDispatcher';
 import events from '../subscribers/events';
+import { Logger } from 'winston';
 
 @Service()
 export default class AuthService {
     constructor(
         @Inject('userModel') private userModel : Models.UserModel,
-        private mailgun: MailgunService,
-        @Inject('logger') private logger,
+        private mailer: MailerService,
+        @Inject('logger') private logger: Logger,
         @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
     ){}
 
@@ -35,9 +36,9 @@ export default class AuthService {
             if(!userRecord) {
                 throw new Error('User cannot be created');
             }
-            this.logger.silly('Sending welcome email');
-            await this.mailgun.SendWelcomeEmail(userRecord.email);
-            this.eventDispatcher.dispatch(events.user.signUp, { user: userRecord});
+            // this.logger.silly('Sending welcome email');
+            // await this.mailer.SendWelcomeEmail(userRecord.email);
+            // this.eventDispatcher.dispatch(events.user.signUp, { user: userRecord});
 
             const user = userRecord.toObject();
             Reflect.deleteProperty(user, 'password');
@@ -69,7 +70,6 @@ export default class AuthService {
 
             const user = userRecord.toObject();
             Reflect.deleteProperty(user, 'password');
-            Reflect.deleteProperty(user, 'salt');
 
             return { user, token };
         } else {
@@ -77,11 +77,11 @@ export default class AuthService {
         }
     }
 
-    public static Logout(user) {
+    public Logout(user: any) {
         this.logger.silly(`Logout by removing JWT for userId: ${user._id}`);
     }
 
-    private generateToken(user) {
+    private generateToken(user: any) {
         const today = new Date();
         const exp = new Date(today);
         exp.setDate(today.getDate() + 60);

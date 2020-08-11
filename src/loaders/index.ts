@@ -21,8 +21,8 @@ export default async ({ expressApp }) => {
     });
     Logger.info('Dependency Injector loaded');
 
-    await jobsLoader({ agenda });
-    Logger.info('Jobs loaded');
+    // await jobsLoader({ agenda });
+    // Logger.info('Jobs loaded');
 
     await expressLoader({ app: expressApp });
     Logger.info('Express loaded');

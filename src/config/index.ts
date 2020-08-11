@@ -28,15 +28,9 @@ export default {
         password: '123456',
     },
     emails: {
-        mailgun: {
-            apiKey: process.env.MAILGUN_API_KEY,
-            domain: process.env.MAILGUN_DOMAIN
-        },
-        nodemailer: {
-            host: process.env.NODEMAILER_HOST,
-            port: process.env.NODEMAILER_USER,
-            user: process.env.NODEMAILER_PORT,
-            pass: process.env.NODEMAILER_PASS,
-        }
+        host: process.env.NODEMAILER_HOST,
+        port: process.env.NODEMAILER_USER,
+        user: process.env.NODEMAILER_PORT,
+        pass: process.env.NODEMAILER_PASS,
     }
 }
