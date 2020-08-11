@@ -29,8 +29,8 @@ export default {
     },
     emails: {
         host: process.env.NODEMAILER_HOST,
-        port: process.env.NODEMAILER_USER,
-        user: process.env.NODEMAILER_PORT,
+        port: process.env.NODEMAILER_PORT,
+        user: process.env.NODEMAILER_USER,
         pass: process.env.NODEMAILER_PASS,
     }
 }
