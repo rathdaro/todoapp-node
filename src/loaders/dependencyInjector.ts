@@ -1,8 +1,6 @@
 import { Container } from 'typedi';
 import LoggerInstance from './logger';
 import agendaFactory from './agenda';
-import config from '../config';
-import nodemailer from 'nodemailer';
 
 export default async ({ mongoConnection, models}: { mongoConnection: any; models: { name: string; model: any }[] }) => {
     try {
@@ -14,14 +12,6 @@ export default async ({ mongoConnection, models}: { mongoConnection: any; models
 
         Container.set('agendaInstance', agendaInstance);
         Container.set('logger', LoggerInstance);
-        Container.set('emailClient', nodemailer.createTransport({
-            host: config.emails.host,
-            port: config.emails.port,
-            auth: {
-                user: config.emails.user,
-                pass: config.emails.pass,
-            }
-        }));
         
         LoggerInstance.info(`Agenda injected into container`);
         return { agenda: agendaInstance};

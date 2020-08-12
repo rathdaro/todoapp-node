@@ -36,7 +36,7 @@ export default class AuthService {
                 throw new Error('User cannot be created');
             }
             this.logger.silly('Sending welcome email');
-            await this.mailer.SendWelcomeEmail(userRecord.email);
+            await this.mailer.SendWelcomeEmail(userRecord.email, userRecord.name);
             this.eventDispatcher.dispatch(events.user.signUp, { user: userRecord});
 
             const user = userRecord.toObject();
@@ -69,8 +69,8 @@ export default class AuthService {
         }
     }
 
-    public Logout(user: any) {
-        this.logger.silly(`Logout by removing JWT for userId: ${user._id}`);
+    public async Logout(user: any) {
+        // TODO creative log out
     }
 
     private generateToken(user: any) {

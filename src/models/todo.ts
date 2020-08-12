@@ -4,11 +4,16 @@ import { ITodo } from '../interfaces/ITodo';
 const Todo = new mongoose.Schema({
     title: {
         type: String,
-        required: [true, 'Please enter a title'],
-        index: true,
+        required: true,
     },
-    info:  String,
-    complete: Boolean
+    description: {
+        type: String,
+        required: true,
+    },
+    status: {
+        type: Boolean,
+        required: true,
+    }
 }, { timestamps: true });
 
 export default mongoose.model<ITodo & mongoose.Document>('Todo', Todo);

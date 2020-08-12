@@ -27,7 +27,7 @@ export default (app: Router) => {
                 const { user, token } = await authServiceInstance.SignUp(req.body as IUserInputDTO);
                 return res.status(201).json({ user, token });
             } catch (e) {
-                Logger.error('AuthRouteSignUpError : %o', e);
+                Logger.error(e);
                 return next(e);
             }
         }
@@ -43,13 +43,13 @@ export default (app: Router) => {
         }),
         async (req: Request, res: Response, next: NextFunction) => {
             const Logger: any = Container.get('logger');
-            Logger.debug('Calling Sign-Up endpoint with body: %o', req.body );
+            Logger.debug('Calling Sign-In endpoint with body: %o', req.body );
             try {
                 const authServiceInstance = Container.get(AuthService);
                 const { user, token } = await authServiceInstance.SignIn(req.body.email, req.body.password);
                 return res.json({ user, token }).status(200);
             } catch (e) {
-                Logger.error('AuthRouteSignInError : %o', e);
+                Logger.error(e);
                 next(e);
             }
         }
@@ -59,10 +59,10 @@ export default (app: Router) => {
         const Logger: any = Container.get('logger');
         Logger.debug('Calling Sign-Out endpoint with body: %o', req.body );
         try {
-            // TODO sign out
+            // TODO implement logout
             return res.status(200).end();
         } catch (e) {
-            Logger.error('AuthRouteLogoutError : %o', e);
+            Logger.error(e);
             next(e);
         }
     });
