@@ -13,10 +13,16 @@ export default async ({ expressApp }) => {
         model: require('../models/user').default,
     };
 
+    const todoModel = {
+        name: 'todoModel',
+        model: require('../models/todo').default,
+    }
+
     const { agenda } = await dependencyInjectorLoader({
         mongoConnection,
         models: [
             userModel,
+            todoModel,
         ]
     });
     Logger.info('Dependency Injector loaded');

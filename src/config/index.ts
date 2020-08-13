@@ -21,7 +21,7 @@ export default {
         concurrency: parseInt(process.env.AGENDA_CONCURRENCY, 10) || 20,
     },
     api: {
-        prefix: '/api'
+        prefix: '/api/v1'
     },
     agendash: {
         user: 'agendash',
