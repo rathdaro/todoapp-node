@@ -10,9 +10,9 @@ export default () => {
 
     auth(app);
     user(app);
+    todo(app);
     agendash(app);
     swagger(app);
-    todo(app);
 
     return app;
 }

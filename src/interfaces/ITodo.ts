@@ -3,12 +3,10 @@ export interface ITodo {
     title: string;
     description: string;
     status: boolean;
-    user: string;
 }
 
 export interface ITodoInputDTO {
     title: string;
     description: string;
     status: boolean;
-    user: string;
 }

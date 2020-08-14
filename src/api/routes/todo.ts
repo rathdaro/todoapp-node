@@ -20,11 +20,24 @@ export default (app: Router) => {
             return res.json({ todos }).status(200);
         } catch (e) {
             Logger.error(e);
-            throw e;
+            next(e);
         }
     });
 
-    route.post('/', middlewares.isAuth, middlewares.attachCurrentUser, celebrate({
+    route.get('/:todo_id', middlewares.isAuth, async (req: Request, res: Response, next: NextFunction) => {
+        const Logger: any = Container.get('logger');
+        Logger.debug('Calling Get todo end-point with params: %o', req.params.todo_id);
+        try {
+            const todoServiceInstance = Container.get(TodoService);
+            const todos = await todoServiceInstance.GetTodoById(req.params.todo_id);
+            return res.json({ todos }).status(200);
+        } catch (e) {
+            Logger.error(e);
+            next(e);
+        }
+    });
+
+    route.post('/add', middlewares.isAuth, middlewares.attachCurrentUser, celebrate({
         body: Joi.object({
             title: Joi.string().required(),
             description: Joi.string().required(),
@@ -32,25 +45,14 @@ export default (app: Router) => {
         })
     }), async (req: Request, res: Response, next: NextFunction) => {
         const Logger: any = Container.get('logger');
-        Logger.debug('Calling Create todo end-point with body: %o', {...req.body, ...req.currentUser._id});
+        Logger.debug('Calling Create todo end-point with body: %o', req.body);
         try {
             const todoServiceInstance = Container.get(TodoService);
-            await todoServiceInstance.CreateTodo( {...req.body, ...req.currentUser._id} as ITodoInputDTO)
+            await todoServiceInstance.CreateTodo(req.body as ITodoInputDTO, req.currentUser._id);
             return res.json(200).end();
         } catch (e) {
             Logger.error(e);
-            throw e;
+            next(e);
         }
     });
-
-    route.put('/:id', middlewares.isAuth, middlewares.attachCurrentUser, async (req) => {
-        
-    });
-
-    route.delete('/:id', middlewares.isAuth, middlewares.attachCurrentUser, async (req) => {
-
-    });
-
-
-
 }
