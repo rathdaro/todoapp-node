@@ -27,6 +27,10 @@ export default {
         user: 'agendash',
         password: '123456',
     },
+    swagger: {
+        user: 'swagger',
+        password: '123456'
+    },
     emails: {
         host: process.env.NODEMAILER_HOST,
         port: process.env.NODEMAILER_PORT,

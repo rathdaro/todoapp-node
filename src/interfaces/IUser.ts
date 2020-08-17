@@ -3,7 +3,7 @@ export interface IUser {
     name: string;
     email: string;
     password: string;
-    todos: [];
+    todos: string[];
 }
 
 export interface IUserInputDTO {
