@@ -9,14 +9,14 @@ export default class TodoService {
         @Inject('logger') private logger: any
     ){ } 
 
-    public async CreateTodo(todoInputDTO: ITodoInputDTO, user_id: string): Promise<any> {
+    public async CreateTodo(user_id: string, todoInputDTO: ITodoInputDTO): Promise<any> {
         try {
             this.logger.silly('Creating a Todo list');
             const todoRecord = await this.todoModel.create({ ...todoInputDTO });
             if (!todoRecord) {
                throw new Error('Error Creating Todo');
             }
-            const userRecord = await this.userModel.update({ _id: user_id }, { $push: { todos: todoRecord._id }});
+            const userRecord = await this.userModel.updateOne({ _id: user_id }, { $push: { todos: todoRecord._id }});
             if (!userRecord) {
                 throw new Error('Error Pushing Todo to User')
             }
@@ -51,11 +51,16 @@ export default class TodoService {
         }
     }
 
-    public async UpdateTodo(user_id: string, todo_id: string): Promise<any> {
+    public async UpdateTodo(user_id: string, todo_id: string, todoInputDTO: ITodoInputDTO): Promise<any> {
         try {
             const userRecord = await this.userModel.findOne({ _id: user_id });
             if (userRecord.todos.includes(todo_id)) {
-                const todo = this.todoModel.findByIdAndUpdate(todo_id, {});
+                const todoRecord = await this.todoModel.updateOne({ _id: todo_id}, {$set : { ...todoInputDTO }});
+                if (!todoRecord) {
+                    throw new Error('Error Updating Todo');
+                } else {
+                    return { message: 'success'};
+                }
             }
         } catch (e) {
             this.logger.error(e);

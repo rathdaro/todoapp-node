@@ -43,7 +43,7 @@ export default (app: Router) => {
         Logger.debug('Calling Create todo end-point with body: %o', req.body);
         try {
             const todoServiceInstance = Container.get(TodoService);
-            const message = await todoServiceInstance.CreateTodo(req.body as ITodoInputDTO, req.currentUser._id);
+            const message = await todoServiceInstance.CreateTodo(req.currentUser._id, req.body as ITodoInputDTO);
             return res.json(message).status(200).end();
         } catch (e) {
             Logger.error(e);
@@ -51,18 +51,21 @@ export default (app: Router) => {
         }
     });
 
-    route.put('/update', middlewares.isAuth, middlewares.attachCurrentUser, celebrate({
+    route.put('/update/:id', middlewares.isAuth, middlewares.attachCurrentUser, celebrate({
+        [Segments.PARAMS]: {
+            id: Joi.string().required()
+        },
         body: Joi.object({
-            title: Joi.string().required(),
-            description: Joi.string().required(),
-            status: Joi.bool().required()
+            title: Joi.string(),
+            description: Joi.string(),
+            status: Joi.bool()
         })
     }), async (req: Request, res: Response, next: NextFunction) => {
         const Logger: any = Container.get('logger');
         Logger.debug('Calling Create todo end-point with body: %o', req.body);
         try {
             const todoServiceInstance = Container.get(TodoService);
-            const message = await todoServiceInstance.UpdateTodo(req.body as ITodoInputDTO, req.currentUser._id);
+            const message = await todoServiceInstance.UpdateTodo(req.currentUser._id, req.params.id, req.body as ITodoInputDTO);
             return res.json(message).status(200).end();
         } catch (e) {
             Logger.error(e);
@@ -77,7 +80,7 @@ export default (app: Router) => {
     }),
     async (req: Request, res: Response, next: NextFunction) => {
         const Logger: any = Container.get('logger');
-        Logger.debug('Calling Delete todo end-point with id: %o', req.params._id);
+        Logger.debug('Calling Delete todo end-point with id: %o', req.params.id);
         try {
             const todoServiceInstance = Container.get(TodoService);
             const message = await todoServiceInstance.DeleteTodo(req.currentUser._id, req.params.id);
