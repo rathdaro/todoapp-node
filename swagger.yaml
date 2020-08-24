@@ -7,6 +7,38 @@ servers:
   - url: http://localhost:3000/api/v1
     description: Local Development Web API
 paths:
+  /users/register:
+    post:
+      summary: Create a new user
+      description: User Registration
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserForm'
+      responses:
+        '201':
+          description: A user object and jwt token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+              examples:
+
+  /users/login:
+    post:
+      summary: Returns user info and token
+      description: User Login
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '201':
+          description: A user object and jwt token
   /users/me:
     get:
       security:
@@ -18,46 +50,40 @@ paths:
           description: a JSON array of user info
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-  /auth/signin:
-    post:
-      summary: Returns user info and token
-      description: User Login
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/UserForm'
-      responses:
-        '201':
-          description: A json array of user and token
-  /auth/signup:
-    post:
-      summary: Returns user info and token
-      description: signup user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
-                password:
-                  type: string
-      responses:
-        '201':
-          description: A json array of user and token
-          content:
 components:
   schemas:
+    Users:
+      type: object
     UserForm:
       type: object
       properties:
         name:
+          type: string
+          description: username
+        email:
+          type: string
+          description: user's email
+        password:
+          type: string
+          description: user's password
+      required:
+        - name
+        - email
+        - password
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+          description: user's email
+        password:
+          type: string
+          description: user's password
+      required:
+        - email
+        - password
+    Users:
+      type: 
   securitySchemes:
     bearerAuth:
       type: http
