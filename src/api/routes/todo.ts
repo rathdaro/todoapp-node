@@ -32,7 +32,7 @@ export default (app: Router) => {
         }
     });
 
-    route.post('/create', middlewares.isAuth, middlewares.attachCurrentUser, celebrate({
+    route.post('/', middlewares.isAuth, middlewares.attachCurrentUser, celebrate({
         body: Joi.object({
             title: Joi.string().required(),
             description: Joi.string().required(),
@@ -51,7 +51,7 @@ export default (app: Router) => {
         }
     });
 
-    route.put('/update/:id', middlewares.isAuth, middlewares.attachCurrentUser, celebrate({
+    route.put('/:id', middlewares.isAuth, middlewares.attachCurrentUser, celebrate({
         [Segments.PARAMS]: {
             id: Joi.string().required()
         },
@@ -73,7 +73,7 @@ export default (app: Router) => {
         }
     });
 
-    route.delete('/delete/:id', middlewares.isAuth, middlewares.attachCurrentUser, celebrate({
+    route.delete('/:id', middlewares.isAuth, middlewares.attachCurrentUser, celebrate({
         [Segments.PARAMS]: {
             id: Joi.string().required()
         }

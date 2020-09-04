@@ -16,7 +16,7 @@ export default class AuthService {
         @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
     ){}
 
-    public async SignUp(userInputDTO: IUserInputDTO): Promise<{ user: IUser; token: string }> {
+    public async SignUp(userInputDTO: any): Promise<{ user: IUser; token: string }> {
         try {
 
             this.logger.silly('Hashing password');
@@ -25,10 +25,7 @@ export default class AuthService {
             const hashedPassword = bcrypt.hashSync(userInputDTO.password, salt);
 
             this.logger.silly('Creating user db record');
-            const userRecord = await this.userModel.create({
-                ...userInputDTO,
-                password: hashedPassword,
-            });
+            const userRecord = await this.userModel.create({ ...userInputDTO, password: hashedPassword});
             this.logger.silly('Generating JWT');
             const token = this.generateToken(userRecord);
 

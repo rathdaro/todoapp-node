@@ -4,10 +4,10 @@ info:
   description: Todoapp web api
   version: 1.0.0
 servers:
-  - url: http://localhost:3000/api/v1
+  - url: http://localhost:3000/api
     description: Local Development Web API
 paths:
-  /users/register:
+  /auth/signup:
     post:
       summary: Create a new user
       description: User Registration
@@ -26,7 +26,7 @@ paths:
                 $ref: '#/components/schemas/Users'
               examples:
 
-  /users/login:
+  /auth/signin:
     post:
       summary: Returns user info and token
       description: User Login
@@ -50,6 +50,22 @@ paths:
           description: a JSON array of user info
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+    put:
+      security:
+        - bearerAuth: []
+      summary: Update info of the current user
+      description: 
+      responses:
+        '200':    # status code
+          description: a JSON array of user info
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /todos/create:
+    post:
+  /todos/update/{id}:
+    put:
+  /todos/delete/{id}:
+    delete:
 components:
   schemas:
     Users:
