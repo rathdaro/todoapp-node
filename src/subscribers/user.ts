@@ -3,7 +3,7 @@ import { EventSubscriber, On} from 'event-dispatch';
 import events from './events';
 import { IUser } from '../interfaces/IUser';
 import mongoose from 'mongoose';
-import MailerService from '../services/mailer';
+// import MailerService from '../services/mailer';
 
 @EventSubscriber()
 export default class UserSubscriber {

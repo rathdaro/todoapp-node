@@ -16,7 +16,7 @@ export default class AuthService {
         @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
     ){}
 
-    public async SignUp(userInputDTO: any): Promise<{ user: IUser; token: string }> {
+    public async SignUp(userInputDTO: IUserInputDTO): Promise<{ user: IUser; token: string }> {
         try {
 
             this.logger.silly('Hashing password');
